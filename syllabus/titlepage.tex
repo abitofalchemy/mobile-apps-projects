@@ -1,0 +1,217 @@
+% SVN info for this file
+\svnidlong
+{$HeadURL$}
+{$LastChangedDate$}
+{$LastChangedRevision$}
+{$LastChangedBy$}
+
+% Remove header and footer
+\thispagestyle{titlepage}
+
+\begin{center}
+  \newlength{\parSepLength}
+  \setlength{\parSepLength}{10ex}
+
+  \Large
+  \centering
+
+  % Main title
+  \thinRule\par
+  \par\vspace{0.15\parSepLength}
+  \begin{minipage}{\textwidth}
+    \centering
+    \fontsize{40pt}{36pt}\selectfont\titleColor\scshape
+    Mobile Application Projects\\
+    
+  \end{minipage}
+  \par\vspace{0.25\parSepLength}
+  \par\thinRule
+
+  \vspace{0.125\parSepLength}
+
+  \begin{minipage}{\textwidth}
+    \centering
+    \large
+    CSE40746 - 01 \\
+    CSE60333 - 01 \\
+    Spring 2013\\
+    
+  \end{minipage}
+
+  \vfill
+
+  % Author
+  \begin{minipage}{\textwidth}
+    \centering
+    \Large
+    Nikhil Yadav and Salvador Aguinaga\\
+    \{nyadav,saguinag\}@nd.edu
+  \end{minipage}
+
+  \vfill
+
+  % Logo and other info
+  \begin{minipage}{0.8\textwidth}
+    \centering
+    \small
+
+    % Examiner
+    \begin{minipage}[t]{0.45\textwidth}
+%      \textsc{Examiner} \\
+%      Prof. Examinus Person\\
+%      Affiliation
+	University of Notre Dame \\
+	Department of Computer Science and Engineering\\
+	
+    \end{minipage}
+    \hfill
+    % Supervisor
+    \begin{minipage}[t]{0.45\textwidth}
+      \raggedleft
+      \textsc{When:} \\
+      M, W, F\\
+      11:45A - 12:35P
+    \end{minipage}
+  \end{minipage}
+\end{center}
+
+%\newpage
+\chapter{Syllabus}
+%\section{Syllabus}
+\labelChapter{introduction}
+\vspace{-16mm}
+%\begin{table}[ht] 
+%\begin{minipage}{0.49\textwidth}
+%\centering\small\renewcommand*{\arraystretch}{1.5} 
+%%\caption[]{Partial Database Table Structure}\label{tbl:dbstruc} 
+%%%\begin{tabularx}{1\textwidth}{p{.2\textwidth}p{.25\textwidth} p{.475\textwidth}} % - 2\tabcolsep}
+%%%\begin{tabular}{1\textwidth}{X|X|X|X|X|X|X}
+%%%\begin{tabular}{c|c|c|c|c|c|c}
+%%%\begin{tabular*}{\columnwidth}{@{\extracolsep{\stretch{1}}}*{7}{c}@{}}
+%%%\begin{tabular*}{\columnwidth}{@{\extracolsep{\stretch{1}}}*{7}{c}@{}}
+%%%-----------
+%%\begin{tabularx}{1\textwidth}{X|X}
+%%\begin{tabularx*}{1\textwidth}{p{.2\textwidth}p{.25\textwidth}} 
+%%\hline
+%%\begin{tabular}{\columnwidth}{@{\extracolsep{\stretch{1}}}*{2}{c}@{}}
+%\begin{tabular}{l p{3.5in}}
+%\textbf{Instructors:} & Nikhil Yadav and Salvador Aguinaga \\
+%& Fitzpatrick 247 \\
+%& \{nyadav,saguinag\}@nd.edu \\
+%\textbf{Office Hours:} & Friday's lecture time slot: 11:45A - 12:35P\\
+%\textbf{Pre-requisites:} & \\
+%\textbf{Suggested Reference Books:} &   \\
+%\textbf{Course Description:} & See inside.nd.edu class search \\
+%\textbf{Course Objectives:} &   \\
+%\textbf{Course Outline:} & \\
+%\midrule
+%\textbf{Dates:} & \textbf{Description} \\
+%Jan 16 & Introduction, the syllabus, course
+%		 requirements, and a review of computing platforms and SDKs \\
+%Jan 18 & Hello world - iOS, Android, etc. \\
+%Week 2 Jan 21 & 	\\
+%Week 3 Jan 28 & 	\\
+%Week 4 Feb 04 & 	\\
+%Week 5 Feb 11 & 	\\
+%
+%\midrule
+%%\textbf{Grade Policy:} & \\
+%\textbf{Grading: }&	Attendance 5\%, Topic presentation 10\%, Mini-projects 15\%,
+%				  	Midterm progress update 30\%, Final Project presentation 30\%,
+%					and working source code submission 10\%  \\
+%%\textbf{Homework} & \\
+%\textbf{Attendance Policy }& University attendance policy applies\\
+%\textbf{Academic Code of Honor} & \href{http://honorcode.nd.edu/the-honor-code/}{\textcolor{blue}{See this link:~\url{honorcode.nd.edu/the-honor-code/}}}\\
+%\midrule
+%\textbf{Important Dates }& \\
+%Classes begin for Notre Dame & Jan 15 \\
+%First class  & Jan 16 \\
+%Mid-Term break & Mar 9 - Mar 17 \\
+%Project Proposal & \\
+%Midterm Progress Update & \\
+%Final Project In-class Presentation & \\
+%Finalists Project Presentation & \\
+%\bottomrule
+%
+%
+%
+%
+%
+%\toprule 
+%
+%%% -----------
+%%
+%\end{tabular} 
+%\end{minipage} 
+%\end{table}
+
+%\newpage
+%% Tables
+\begin{center}
+\renewcommand*{\arraystretch}{1.5}
+\begin{longtable}{ p{0.3\textwidth} p{0.6\textwidth} }
+%\begin{longtable}{l *{2}{p{0.3\textwidth} } }
+%\caption[Examples of sensors found in today's smartphones and typical manufacturers, in 
+%	particular order]{Examples of sensors found in today's smartphones and typical 
+%	manufacturers, in particular order} \label{tbl:sensors} \\
+
+%\toprule[0.25mm] 
+%\multicolumn{1}{l}{\textbf{}} & 
+%\multicolumn{1}{l}{\textbf{}}   \\[1.0mm] %\toprule[0.25mm]
+\endfirsthead
+
+\multicolumn{2}{c}%
+%{{\bfseries \tablename\ \thetable{} -- continued from previous page}} \\
+{{\bfseries \emph{-- continued from previous page}}} \\
+\toprule[0.25mm] 
+%\multicolumn{1}{l}{\textbf{Sensor}} &
+%\multicolumn{1}{l }{\textbf{Sensor Manufacturers}}   \\\toprule[0.25mm] 
+\endhead
+
+\hline \multicolumn{2}{r}{{\bfseries \emph{Continued on next page...}}} \\
+\endfoot
+
+\bottomrule
+\endlastfoot
+
+\textbf{Instructors:} & Nikhil Yadav and Salvador Aguinaga \\
+& Fitzpatrick 247 \\
+& \{nyadav,saguinag\}@nd.edu \\
+\textbf{Office Hours:} & Friday's lecture time slot: 11:45A - 12:35P\\
+\textbf{Pre-requisites:} & \\
+\textbf{Suggested Reference Books:} &   \\
+\textbf{Course Description:} & See inside.nd.edu class search \\
+\textbf{Course Objectives:} &   \\
+\textbf{Course Outline:} & \\
+\midrule
+\textbf{Dates:} & \textbf{Description} \\
+Jan 16 & Introduction, the syllabus, course
+		 requirements, and a review of computing platforms and SDKs \\
+Jan 18 & Hello world - iOS, Android, etc. \\
+Week 2 Jan 21 & 	\\
+Week 3 Jan 28 & 	\\
+Week 4 Feb 04 & 	\\
+Week 5 Feb 11 & 	\\
+
+\midrule
+%\textbf{Grade Policy:} & \\
+\textbf{Grading: }&	Attendance 5\%, Topic presentation 10\%, Mini-projects 15\%,
+				  	Midterm progress update 30\%, Final Project presentation 30\%,
+					and working source code submission 10\%  \\
+%\textbf{Homework} & \\
+\textbf{Attendance Policy }& University attendance policy applies\\
+\textbf{Academic Code of Honor} & \href{http://honorcode.nd.edu/the-honor-code/}{\textcolor{blue}{See this link:~\url{honorcode.nd.edu/the-honor-code/}}}\\
+\midrule
+\textbf{Important Dates }& \\
+Classes begin for Notre Dame & Jan 15 \\
+First class  & Jan 16 \\
+Mid-Term break & Mar 9 - Mar 17 \\
+Project Proposal & \\
+Midterm Progress Update & \\
+Final Project In-class Presentation & \\
+Finalists Project Presentation & \\
+%\bottomrule
+
+
+\end{longtable}
+\end{center}%%\end{landscape}
