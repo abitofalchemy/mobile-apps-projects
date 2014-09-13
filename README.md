@@ -1,4 +1,10 @@
 mobile-apps-projects
 ====================
 
-Univ. of Notre Dame Mobile Application Projects (CSE60333/CSE40746)
+Univ. of Notre Dame 
+-------------------
+
+Mobile Application Projects & Examples
+
+A Simple Database Mobile Interface
+
