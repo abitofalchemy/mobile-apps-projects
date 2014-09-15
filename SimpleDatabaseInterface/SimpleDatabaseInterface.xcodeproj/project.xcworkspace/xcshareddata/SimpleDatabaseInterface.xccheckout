@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>081801FB-99D1-4BA8-A313-AA8C77D6C6AB</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SimpleDatabaseInterface</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>C6DE5ED4-973C-4127-919D-E9C55633734A</key>
+		<string>https://github.com/abitofalchemy/mobile-apps-projects.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SimpleDatabaseInterface/SimpleDatabaseInterface.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>C6DE5ED4-973C-4127-919D-E9C55633734A</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/abitofalchemy/mobile-apps-projects.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>C6DE5ED4-973C-4127-919D-E9C55633734A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>C6DE5ED4-973C-4127-919D-E9C55633734A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>mobile-apps-projects</string>
+		</dict>
+	</array>
+</dict>
+</plist>

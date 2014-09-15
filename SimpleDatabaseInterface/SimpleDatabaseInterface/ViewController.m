@@ -172,7 +172,7 @@
             if ([self validateBasicInputForTextFields])
                 return; // there is a problem
             [self registerUserWithEmail:username.text
-                           plusPassword:passwordTextField.text];
+                           plusPassword:passwordTextField.text]; 
         }
     }
     
