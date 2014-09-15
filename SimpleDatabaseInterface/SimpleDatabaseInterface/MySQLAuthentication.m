@@ -46,18 +46,19 @@
     // this case, the redirectUrl contains slashes so it is encoded.
     
     NSURL *myUrl = [NSURL URLWithString:[NSString stringWithFormat:@"%@"
-                                         @"/loginUser?username=%@"
+                                         @"/loginsvc.php?username=%@"
                                          @"&password=%@",
                                          requestParameters[@"authenticatingServerBaseUrl"],
                                          requestParameters[@"username"],
                                          requestParameters[@"password"]]
                     ];
     
-    
+    NSLog(@"myUrl:%@", myUrl);
+
     NSMutableURLRequest *myRequest = [NSMutableURLRequest requestWithURL:myUrl
                                                              cachePolicy:NSURLCacheStorageAllowed
                                                          timeoutInterval:60.0];
-    
+
     [myRequest setHTTPShouldHandleCookies:YES];
     
     [self loadRequest:myRequest];
@@ -75,21 +76,12 @@
     // this case, the redirectUrl contains slashes so it is encoded.
     
     NSString *urlString = [NSString stringWithFormat:@"%@"
-                           @"/addCLTestResult?userid=%@"
-                           @"&facility_id=%@"
-                           @"&result_value=%@"
-                           @"&result_date=%@"
-                           @"&product_id=%@"
-                           @"&lot_number=%@"
-                           @"&test_notes=%@",
+                           @"/registersvc.php?username=%@"
+                           @"&password=%@",
                            requestParameters[@"authenticatingServerBaseUrl"],
-                           requestParameters[@"userId"],
-                           requestParameters[@"facilityId"],
-                           requestParameters[@"resultValue"],
-                           requestParameters[@"resultDate"],
-                           requestParameters[@"productId"],
-                           requestParameters[@"lotNumber"],
-                           requestParameters[@"testNotes"]];
+                           requestParameters[@"username"],
+                           requestParameters[@"password"]];
+
     
     // 14Aug14/SA: Added a mechanism to avoid problems with the html post string
     NSString* urlTextEscaped = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -181,43 +173,43 @@ shouldStartLoadWithRequest: (NSURLRequest *)request
     NSLog(@"MySQLAuthentication  webViewDidFinishLoad");
     
     NSString *someHTML = [webView stringByEvaluatingJavaScriptFromString:@"document.body.innerHTML"];
-    NSLog(@"webView Did Finish Load :: %@", someHTML);//
-    NSError *error = nil;
-    NSData *jsonData = [[self convertHTML:someHTML] dataUsingEncoding:NSASCIIStringEncoding];
-    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                             options:kNilOptions error:&error];
-    
-    resultParameters = [[NSMutableDictionary alloc] initWithDictionary:jsonDict];
-    
-    //NSLog(@"JSON: %@",[jsonDict objectForKey:@"customer_id"]);
-    
-    
-    NSRange start,end;
-    start = [someHTML rangeOfString:@">"];
-    end   = [[someHTML substringFromIndex:start.location] rangeOfString:@"<"];
-    
-    NSString *cloudRecordUID = [someHTML substringWithRange:NSMakeRange(start.location+1, end.location -1)];
-    if (jsonDict)
-    {
-        if ([[jsonDict valueForKey:@"customer_id"] isEqualToNumber:[NSNumber numberWithBool:NO]])
-            [self authenticationFailure];
-        else {
-            [authenticationDelegate hideActivityIndicator];
-            [self removeFromSuperview];
-            NSLog(@"webViewDidFinishLoad : cloudRecordUID: %@", cloudRecordUID);
-            [self authenticationComplete];
-        }
-        
-    }   else if ([cloudRecordUID isEqualToString:@""])
-        [self authenticationFailure];
-    else {
-        resultParameters = [[NSMutableDictionary alloc] initWithObjects:@[cloudRecordUID] forKeys:@[@"cloudRecordUID"]];
+    if ([someHTML isEqualToString:@"[]"] ) {
         [authenticationDelegate hideActivityIndicator];
         [self removeFromSuperview];
-        NSLog(@"webViewDidFinishLoad :: %@", cloudRecordUID);
-        [self authenticationComplete];
+        [self authenticationFailure];
+
     }
-    
+    else {
+        NSLog(@"webView Did Finish Load :: %@", someHTML);//
+        NSError *error = nil;
+        NSData *jsonData = [[self convertHTML:someHTML] dataUsingEncoding:NSASCIIStringEncoding];
+        NSArray *jsonArr = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                                 options:kNilOptions error:&error];
+        
+        //NSLog(@"JSON: %@",jsonArr);
+
+    //    resultParameters = [[NSMutableDictionary alloc] initWithDictionary:jsonDict];
+        resultParameters = [[NSMutableDictionary alloc] initWithObjects:jsonArr forKeys:@[@"authParams"]];
+        
+        NSLog(@"JSON resultParameters: %@",resultParameters);// objectForKey:@"customer_id"]);
+        if (resultParameters)
+        {
+            if ([resultParameters valueForKey:@"authParams"] == NULL )
+                [self authenticationFailure];
+            else {
+                [authenticationDelegate hideActivityIndicator];
+                [self removeFromSuperview];
+                [[NSUserDefaults standardUserDefaults] setObject:resultParameters forKey:@"authDictionary"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [self authenticationComplete];
+            }
+            
+        }   else {
+            [authenticationDelegate hideActivityIndicator];
+            [self removeFromSuperview];
+            [self authenticationFailure];
+        }
+    }// ends if
     
     
     
@@ -277,7 +269,7 @@ shouldStartLoadWithRequest: (NSURLRequest *)request
     NSLog(@"MySQLAuthentication authenticationComplete");
     NSLog(@"MySQLAuthentication resultParameters: %@", resultParameters);
     
-    [authenticationDelegate authenticatedSuccess: YES result:resultParameters];
+    [authenticationDelegate authenticatedSuccess:YES result:resultParameters];
 }
 
 /**

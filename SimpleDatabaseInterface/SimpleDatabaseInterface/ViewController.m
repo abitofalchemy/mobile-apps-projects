@@ -8,7 +8,7 @@
 
 #import "ViewController.h"
 
-#define CLOUD_SERVER_URL @"http://dsg1.crc.nd.edu/apiConnect.svc"
+#define CLOUD_SERVER_URL @"http://ec2-23-23-18-45.compute-1.amazonaws.com"
 
 @interface ViewController ()
 
@@ -22,6 +22,10 @@
     // The activity indicator (spinner) to inform the user that the
     // authentication process is busy communicating with the server.
     UIActivityIndicatorView *activityIndicator;
+    
+    UIButton* loginButton;
+    UIButton* registerButton;
+    UInt16 buttonSelected;
 }
 @synthesize username          = _username;
 @synthesize phoneNumber       = _phoneNumber;
@@ -34,9 +38,11 @@
 	// Do any additional setup after loading the view, typically from a nib.
     CGRect headerLabelFrame = CGRectMake(20.0f, 60, 280.0f, 31.0f);
     headerLabel = [[UILabel alloc] initWithFrame:headerLabelFrame];
-    headerLabel.text = @"Login to MySQL DB";
+    headerLabel.text = @"Login or Register (MySQL)";
+    headerLabel.textAlignment = NSTextAlignmentCenter;
     headerLabel.textColor = [UIColor darkTextColor];
     [self.view addSubview:headerLabel];
+    [headerLabel setCenter:CGPointMake(self.view.center.x, headerLabel.center.y)];
     
     CGRect passwordTextFieldFrame = CGRectMake(20.0f, 100.0f, 280.0f, 31.0f);
     username = [[UITextField alloc] initWithFrame:passwordTextFieldFrame];
@@ -86,20 +92,39 @@
     
     CGRect buttonFrame = CGRectMake(0, 0, 160.0, 50.0);
 
-    UIButton* submitButton = [[UIButton alloc] initWithFrame:CGRectZero];
-    submitButton.frame = buttonFrame;
-    submitButton.backgroundColor = [UIColor blueColor];
-    submitButton.titleLabel.textColor = [UIColor whiteColor];
-    [submitButton setTitle:@"Submit" forState:UIControlStateNormal];
-    [submitButton addTarget:self action:@selector(submitLogin:)
+    loginButton = [[UIButton alloc] initWithFrame:CGRectZero];
+    loginButton.frame = buttonFrame;
+    loginButton.backgroundColor = [UIColor blueColor];
+    loginButton.titleLabel.textColor = [UIColor whiteColor];
+    [loginButton setTitle:@"Login" forState:UIControlStateNormal];
+    [loginButton addTarget:self action:@selector(submitLogin:)
            forControlEvents:(UIControlEventTouchUpInside)];
-    submitButton.layer.borderColor = [UIColor blueColor].CGColor;
-    submitButton.layer.borderWidth = 2.0;
-    submitButton.layer.cornerRadius = 8.0;
-    [self.view addSubview:submitButton];
-    [submitButton setCenter:self.view.center];
+    loginButton.layer.borderColor = [UIColor blueColor].CGColor;
+    loginButton.layer.borderWidth = 2.0;
+    loginButton.layer.cornerRadius = 8.0;
+    loginButton.tag = 10;
+    [self.view addSubview:loginButton];
+    [loginButton setCenter:self.view.center];
     
+    registerButton = [[UIButton alloc] initWithFrame:CGRectZero];
+    registerButton.frame = buttonFrame;
+    registerButton.backgroundColor = [UIColor blueColor];
+    registerButton.titleLabel.textColor = [UIColor whiteColor];
+    [registerButton setTitle:@"Register" forState:UIControlStateNormal];
+    [registerButton addTarget:self action:@selector(submitLogin:)
+          forControlEvents:(UIControlEventTouchUpInside)];
+    registerButton.layer.borderColor = [UIColor blueColor].CGColor;
+    registerButton.layer.borderWidth = 2.0;
+    registerButton.layer.cornerRadius = 8.0;
+    registerButton.tag = 11;
+    [self.view addSubview:registerButton];
+    [registerButton setCenter:CGPointMake(loginButton.center.x, self.view.center.y + 1.2*registerButton.frame.size.height)];
     
+    [username setHidden:YES];
+    [passwordTextField setHidden:YES];
+    [phoneNumber setHidden:YES];
+    
+    buttonSelected = 0;
 }
 
 - (void)didReceiveMemoryWarning
@@ -114,14 +139,51 @@
     return YES;
 }
 #pragma mark - Button Action Methods
+
 -(void) submitLogin:(UIButton*) sender
 {
-    NSLog(@"You've pressed the Submit button");
+    NSLog(@"tag = %d", sender.tag);
+    if (sender.tag == 10)
+    {
+        [registerButton setHidden:YES];
+        headerLabel.text = @"Login (MySQL Back-end)";
+
+        if (buttonSelected == 0){
+            buttonSelected = 1;
+            [username setHidden:NO];
+            [passwordTextField setHidden:NO];
+        } else if (buttonSelected == 1) {
+            if ([self validateBasicInputForTextFields])
+                return; // there is a problem
+            [self loginUserAction];
+            
+
+        }
+    }
+    else {
+        [loginButton setHidden:YES];
+        headerLabel.text = @"Register (MySQL Back-end)";
+
+        if (buttonSelected == 0){
+            buttonSelected = 1;
+            [username setHidden:NO];
+            [passwordTextField setHidden:NO];
+        } else if (buttonSelected == 1) {
+            if ([self validateBasicInputForTextFields])
+                return; // there is a problem
+            [self registerUserWithEmail:username.text
+                           plusPassword:passwordTextField.text];
+        }
+    }
     
-    if ([self validateBasicInputForTextFields])
-        return; // there is a problem
     
-    // Query the Server
+    /* Query the Server
+    */
+    
+}
+-(void) loginUserAction {
+    
+    NSLog(@"You've pressed the Login button");
     if ([self userInCloudStoreWithEmail:username.text
                            plusPassword:passwordTextField.text])
     {
@@ -129,11 +191,67 @@
     } else {
         
     }
+}
+-(void) registerUserWithEmail:(NSString *)emailStr
+                 plusPassword:(NSString*)passwordStr
+{
+
+    NSLog(@"You've pressed the Register button");
+    // Load the authentication parameters into _requestParameters.
+    NSDictionary *requestParameters = [[NSDictionary alloc]
+                                       initWithObjects:@[CLOUD_SERVER_URL,emailStr,passwordStr]
+                                       forKeys:@[@"authenticatingServerBaseUrl",@"username",@"password"]];
+    
+    NSLog(@"\n\n**************\n%@\n**************\n\n",requestParameters);
+    
+    // If the parameters are null, the user probably forgot to set them
+    // in the authenticationList.plist properties file.
+    if ([requestParameters[@"username"] isEqualToString:@""] ||
+        [requestParameters[@"password"] isEqualToString:@""] )
+    {
+        
+        [self displayNoAuthenticationParametersMessage];
+        
+    } else {
+        
+        // Create our custom UIWebView so that it fills the iPhone screen.
+        authenticationWebView = [[MySQLAuthentication alloc]
+                                 initWithFrame:CGRectMake
+                                 (0, 20, self.view.frame.size.width,
+                                  self.view.frame.size.height-100)];
+        
+        // Our custom UIWebView has a delegate so that it can tell this class that
+        // it is done authenticating.
+        authenticationWebView.authenticationDelegate = self;
+        authenticationWebView.layer.cornerRadius = 8.0;
+        authenticationWebView.layer.borderWidth  = 2.0;
+        authenticationWebView.layer.borderColor  = [UIColor whiteColor].CGColor;
+        [authenticationWebView setBackgroundColor:[UIColor clearColor]];
+        [authenticationWebView setAlpha:0.5f];
+        
+        // Add our custom UIWebView to this view controllers screen.
+        [self.view addSubview:authenticationWebView];
+        
+        // Make the token POSt request.
+        [authenticationWebView postToken:requestParameters];
+        
+        // Add activity spinner.
+        activityIndicator =
+        [[UIActivityIndicatorView alloc]
+         initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        activityIndicator.frame =CGRectMake(self.view.frame.size.width/2-25,
+                                            self.view.frame.size.height/2-50,50,50);
+        
+        activityIndicator.color = [UIColor grayColor];
+        
+        [activityIndicator startAnimating];
+    }
     
 }
+
 -(BOOL) validateBasicInputForTextFields
 {
-    if ([username.text isEqualToString:@""] || [phoneNumber.text isEqualToString:@""] || [passwordTextField.text isEqualToString:@""])
+    if ([username.text isEqualToString:@""] /*|| [phoneNumber.text isEqualToString:@""] */|| [passwordTextField.text isEqualToString:@""])
     {
         // if either of the fields is empty return an error
         headerLabel.text = @"One of your input fields is empty";
@@ -193,61 +311,15 @@
  *           were returned on the redirect URI.
  */
 - (void)authenticatedSuccess:(BOOL)success
-                      result:(NSMutableDictionary *)result {
-    //NSLog(@"\n\n%d\n%@\n\n",success,result);
-    
-    //    _resultParameters = result;
-    //
-    //    // Start the Access Token expiration timer if an "expires_in" parameter was
-    //    // returned.
-    //    if ([result objectForKey:@"expires_in"] != nil) {
-    //
-    //        accessTokenTimeRemaining =
-    //        [[result objectForKey:@"expires_in"] floatValue];
-    //
-    //        // Make sure the timer wasn't already defined. If so, null it out.
-    //        if (accessTokenExpirationTimer.isValid) {
-    //            [accessTokenExpirationTimer invalidate];
-    //        }
-    //
-    //        // Create a new 1 second long, repeating timer so we can count down the
-    //        // remaining seconds in the access token's lifetime.
-    //        // Calls decrementAccessTokenTimer: below every second when active.
-    //        accessTokenExpirationTimer = [NSTimer
-    //                                      scheduledTimerWithTimeInterval:1.0
-    //                                      target:self
-    //                                      selector:@selector(decrementAccessTokenTimer:)
-    //                                      userInfo:nil
-    //                                      repeats:YES];
-    //
-    //        // If no token time remaining was sent, display a "n/a" message
-    //    } else {
-    //        [accessTokenTimeRemainingLabel
-    //         setText: @"Error in Authentication Process"];
-    //    }
-    //
-    //    // Dispose of the custom UIWebView.
-    //    // We use the webview once for signing in. To sign in again, we create a
-    //    // new one. They are not meant for re-use!
-    //    [authenticationWebView removeFromSuperview];
-    //    authenticationWebView = nil;
-    //
-    //    // Create the resultParametersLabel if it does not exist
-    //    if (resultParametersLabel == nil) {
-    //        resultParametersLabel = [[UILabel alloc]
-    //                                 initWithFrame:CGRectMake
-    //                                 (10, 20, self.view.frame.size.width - 20,
-    //                                  self.view.frame.size.height - 100)];
-    //        [resultParametersLabel
-    //         setFont:[UIFont fontWithName:@"Courier New" size:11.0f]];
-    //        [resultParametersLabel setTextColor:[UIColor blackColor]];
-    //        resultParametersLabel.numberOfLines=20;
-    //        [self.view addSubview:resultParametersLabel];
-    //    }
-    
+                      result:(NSMutableDictionary *)result
+{
     // Display the result parameters on the iPhone screen.
     if (success) {
-        NSLog(@"%@", [result objectForKey:@"facilities"]);
+        NSLog(@"results");
+        [username setHidden:YES];
+        [passwordTextField setHidden:YES];
+        [loginButton setHidden:YES];
+        [headerLabel setText:@"Successful Login"];
         
     } else {
         //resultParametersLabel.text =
