@@ -10,6 +10,7 @@
 
 @protocol AuthenticationDelegate <NSObject>
 - (void)authenticatedSuccess: (BOOL) success result: (NSDictionary *) result;
+- (void)registrationSuccess: (BOOL) success result: (NSString *) result;
 - (void)displayActivityIndicator;
 - (void)hideActivityIndicator;
 @end

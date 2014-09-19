@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		884C5FEE19C9895400B144C0 /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 884C5FED19C9895400B144C0 /* README.txt */; };
 		884F740019C35A3D00382D7C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884F73FF19C35A3D00382D7C /* Foundation.framework */; };
 		884F740219C35A3D00382D7C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884F740119C35A3D00382D7C /* CoreGraphics.framework */; };
 		884F740419C35A3D00382D7C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 884F740319C35A3D00382D7C /* UIKit.framework */; };
@@ -35,6 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		884C5FED19C9895400B144C0 /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		884F73FC19C35A3D00382D7C /* SimpleDatabaseInterface.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleDatabaseInterface.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		884F73FF19C35A3D00382D7C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		884F740119C35A3D00382D7C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -85,6 +87,7 @@
 		884F73F319C35A3D00382D7C = {
 			isa = PBXGroup;
 			children = (
+				884C5FED19C9895400B144C0 /* README.txt */,
 				884F740519C35A3D00382D7C /* SimpleDatabaseInterface */,
 				884F742419C35A3D00382D7C /* SimpleDatabaseInterfaceTests */,
 				884F73FE19C35A3D00382D7C /* Frameworks */,
@@ -235,6 +238,7 @@
 			files = (
 				884F741819C35A3D00382D7C /* Images.xcassets in Resources */,
 				884F740A19C35A3D00382D7C /* InfoPlist.strings in Resources */,
+				884C5FEE19C9895400B144C0 /* README.txt in Resources */,
 				884F741319C35A3D00382D7C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -462,6 +466,7 @@
 				884F743019C35A3D00382D7C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		884F743119C35A3D00382D7C /* Build configuration list for PBXNativeTarget "SimpleDatabaseInterfaceTests" */ = {
 			isa = XCConfigurationList;
@@ -470,6 +475,7 @@
 				884F743319C35A3D00382D7C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

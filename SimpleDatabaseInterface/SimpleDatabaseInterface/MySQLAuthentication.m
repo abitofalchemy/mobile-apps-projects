@@ -12,6 +12,7 @@
 {
     NSDictionary *requestParameters;
     NSMutableDictionary *resultParameters;
+    NSString* queryMessage;
 }
 
 @synthesize authenticationDelegate;
@@ -52,9 +53,6 @@
                                          requestParameters[@"username"],
                                          requestParameters[@"password"]]
                     ];
-    
-    NSLog(@"myUrl:%@", myUrl);
-
     NSMutableURLRequest *myRequest = [NSMutableURLRequest requestWithURL:myUrl
                                                              cachePolicy:NSURLCacheStorageAllowed
                                                          timeoutInterval:60.0];
@@ -77,7 +75,7 @@
     
     NSString *urlString = [NSString stringWithFormat:@"%@"
                            @"/registersvc.php?username=%@"
-                           @"&password=%@",
+                           @"&plain_password=%@",
                            requestParameters[@"authenticatingServerBaseUrl"],
                            requestParameters[@"username"],
                            requestParameters[@"password"]];
@@ -118,39 +116,7 @@ shouldStartLoadWithRequest: (NSURLRequest *)request
     if (conn == nil) {
         NSLog(@"cannot create connection");
     }
-    //
-    // Search for the redirect URI in the request URI. It should be at
-    // position 0. If not found, return "YES" to allow the request to be made.
-    //    if ([[request.URL.absoluteString lowercaseString]
-    //         rangeOfString:[requestParameters[@"redirectUrl"]
-    //                        lowercaseString]].location != 0)
-    //    {
-    //
-    //             return YES;
-    //
-    //         // If the redirect URI was found, parse the parameters and return
-    //         // "NO" because we do not want to load the redirect URI in the
-    //         // browser.
-    //         } else {
-    
-    //             NSArray *urlArray = [request.URL.absoluteString
-    //                                  componentsSeparatedByString:@"#"];
-    //             NSArray *parameterArray = [NSArray new];
-    //             resultParameters = [NSMutableDictionary new];
-    //
-    //             // Parse the token and other parameters from the URI string
-    //             if ([urlArray count] > 0) {
-    //                parameterArray = [urlArray[1] componentsSeparatedByString:@"&"];
-    //                for (NSString *item in parameterArray) {
-    //                     [resultParameters
-    //                        setObject:[item
-    //                        componentsSeparatedByString:@"="][1]
-    //                        forKey:[item componentsSeparatedByString:@"="][0]];
-    //                }
-    //             }
     return YES;
-    
-    //         }
 }
 
 /**
@@ -182,33 +148,46 @@ shouldStartLoadWithRequest: (NSURLRequest *)request
     else {
         NSLog(@"webView Did Finish Load :: %@", someHTML);//
         NSError *error = nil;
-        NSData *jsonData = [[self convertHTML:someHTML] dataUsingEncoding:NSASCIIStringEncoding];
-        NSArray *jsonArr = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                                 options:kNilOptions error:&error];
-        
-        //NSLog(@"JSON: %@",jsonArr);
-
-    //    resultParameters = [[NSMutableDictionary alloc] initWithDictionary:jsonDict];
-        resultParameters = [[NSMutableDictionary alloc] initWithObjects:jsonArr forKeys:@[@"authParams"]];
-        
-        NSLog(@"JSON resultParameters: %@",resultParameters);// objectForKey:@"customer_id"]);
-        if (resultParameters)
-        {
-            if ([resultParameters valueForKey:@"authParams"] == NULL )
-                [self authenticationFailure];
-            else {
+            NSData *jsonData = [[self convertHTML:someHTML] dataUsingEncoding:NSASCIIStringEncoding];
+            NSArray *jsonArr = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                                     options:kNilOptions error:&error];
+            if ([jsonArr[0] hasPrefix:@"New record has id"])
+            {
+                NSLog(@"Was a new user registration");
+                resultParameters = [[NSMutableDictionary alloc] initWithObjects:jsonArr forKeys:@[@"queryMessage"]];
+            } else
+                resultParameters = [[NSMutableDictionary alloc] initWithObjects:jsonArr forKeys:@[@"authParams"]];
+            
+            NSLog(@"JSON resultParameters: %@",resultParameters);// objectForKey:@"customer_id"]);
+            if (resultParameters)
+            {
+                
+                if ([resultParameters valueForKey:@"authParams"] == NULL )
+                {
+                    if ([resultParameters valueForKey:@"queryMessage"] == NULL )
+                        [self authenticationFailure];
+                    else
+                    {
+                        [authenticationDelegate hideActivityIndicator];
+                        [self removeFromSuperview];
+                        queryMessage = [resultParameters valueForKey:@"queryMessage"];
+                        [self userRegistrationComplete];
+                    }
+                }
+                else {
+                    [authenticationDelegate hideActivityIndicator];
+                    [self removeFromSuperview];
+                    [[NSUserDefaults standardUserDefaults] setObject:resultParameters forKey:@"authDictionary"];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    [self authenticationComplete];
+                }
+                
+            }   else {
                 [authenticationDelegate hideActivityIndicator];
                 [self removeFromSuperview];
-                [[NSUserDefaults standardUserDefaults] setObject:resultParameters forKey:@"authDictionary"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                [self authenticationComplete];
+                [self authenticationFailure];
             }
-            
-        }   else {
-            [authenticationDelegate hideActivityIndicator];
-            [self removeFromSuperview];
-            [self authenticationFailure];
-        }
+//        }
     }// ends if
     
     
@@ -262,6 +241,15 @@ shouldStartLoadWithRequest: (NSURLRequest *)request
     
 }
 
+/**
+ * We are done. Notify the parent UIViewController that we have token.
+ */
+- (void)userRegistrationComplete {
+    NSLog(@"MySQLAuthentication userRegistrationComplete");
+    NSLog(@"MySQLAuthentication resultParameters: %@", resultParameters);
+    
+    [authenticationDelegate registrationSuccess:YES result:queryMessage];
+}
 /**
  * We are done. Notify the parent UIViewController that we have token.
  */

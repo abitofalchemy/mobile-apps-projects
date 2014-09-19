@@ -139,7 +139,6 @@
     return YES;
 }
 #pragma mark - Button Action Methods
-
 -(void) submitLogin:(UIButton*) sender
 {
     NSLog(@"tag = %d", sender.tag);
@@ -163,6 +162,9 @@
     else {
         [loginButton setHidden:YES];
         headerLabel.text = @"Register (MySQL Back-end)";
+        [UIView animateWithDuration:0.8 animations:^{
+            [registerButton setCenter:loginButton.center];
+        }];
 
         if (buttonSelected == 0){
             buttonSelected = 1;
@@ -315,7 +317,7 @@
 {
     // Display the result parameters on the iPhone screen.
     if (success) {
-        NSLog(@"results");
+        
         [username setHidden:YES];
         [passwordTextField setHidden:YES];
         [loginButton setHidden:YES];
@@ -332,7 +334,44 @@
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
-
+/**
+ * This callback is executed when the UIWebView has completed the token request.
+ * We dispose of the UIWebView and display the results.
+ *
+ * @success - A boolean. If false, a timeout or loss of connection may have
+ *            occured. In that case, result may be null.
+ *
+ * @result - NSDictionary object containing the parameters and values that
+ *           were returned on the redirect URI.
+ */
+- (void) registrationSuccess:(BOOL)success
+                      result:(NSString *)result
+{
+    // Display the result parameters on the iPhone screen.
+    if (success) {
+        
+        [username setHidden:YES];
+        [passwordTextField setHidden:YES];
+        [loginButton setHidden:YES];
+        
+        [UIView animateWithDuration:0.8 animations:^{
+            [headerLabel setText:result];
+            [registerButton setAlpha:0];
+            
+        }];
+        
+        
+    } else {
+        //resultParametersLabel.text =
+        //[NSString stringWithFormat:@"FAILURE\n%@",result];
+        //isAccessTokenValid = NO;
+        
+        NSLog(@"%@",[NSString stringWithFormat:@"FAILURE\n%@",result]);
+        return;
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 //
 - (BOOL) isUserInNSUserDefaults: (NSString *)user havingPassword: (NSString *)pass
 {
