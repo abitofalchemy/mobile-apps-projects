@@ -1,10 +1,10 @@
 mobile-apps-projects
 ====================
 
-Univ. of Notre Dame 
--------------------
+ND CSE 30246 - Database Concepts
+--------------------------------
 
-Mobile App Sample Projects 
+Mobile App Sample Projects and Tutorial
 
 * SimpleDatabaseInterface 
   iOS - A Simple Database Mobile Interface
