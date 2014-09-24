@@ -9,6 +9,8 @@
 #import "ViewController.h"
 
 #define CLOUD_SERVER_URL @"http://ec2-23-23-18-45.compute-1.amazonaws.com"
+//#define CLOUD_SERVER_URL @"http://dsg1.crc.nd.edu/~saguinag"
+
 
 @interface ViewController ()
 

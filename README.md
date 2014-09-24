@@ -4,10 +4,22 @@ mobile-apps-projects
 Univ. of Notre Dame 
 -------------------
 
-Mobile Application Projects & Examples
+Mobile App Sample Projects 
 
-A Simple Database Mobile Interface
+* SimpleDatabaseInterface 
+  iOS - A Simple Database Mobile Interface
+  This is a very primitive example of a login view controller
 
-http://www.androidhive.info/2012/01/android-login-and-registration-with-php-mysql-and-sqlite/
+* AsyncSimpleDatabaseInterface
+  Android example
+ 
+* MobileToMysqlTutorial 
+  Slides and other useful information
 
-registersvc.php
+Referenced Work:
+- http://www.learn2crack.com/2013/10/android-asynctask-json-parsing-example.html
+- http://www.androidhive.info/2012/01/android-login-and-registration-with-php-mysql-and-sqlite/
+- http://www.edumobile.org/android/android-tutorial/http-connect-example-in-android-development/
+- http://www.androidhive.info/2012/05/how-to-connect-android-with-php-mysql/
+- http://itweb-projects.com/wordpress/android-connecting-to-mysql-using-php
+

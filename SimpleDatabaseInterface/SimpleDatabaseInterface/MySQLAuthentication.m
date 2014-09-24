@@ -53,6 +53,8 @@
                                          requestParameters[@"username"],
                                          requestParameters[@"password"]]
                     ];
+    NSLog(@"FULL URL:%@", myUrl);
+
     NSMutableURLRequest *myRequest = [NSMutableURLRequest requestWithURL:myUrl
                                                              cachePolicy:NSURLCacheStorageAllowed
                                                          timeoutInterval:60.0];
@@ -75,7 +77,7 @@
     
     NSString *urlString = [NSString stringWithFormat:@"%@"
                            @"/registersvc.php?username=%@"
-                           @"&plain_password=%@",
+                           @"&password=%@",
                            requestParameters[@"authenticatingServerBaseUrl"],
                            requestParameters[@"username"],
                            requestParameters[@"password"]];
@@ -84,7 +86,7 @@
     // 14Aug14/SA: Added a mechanism to avoid problems with the html post string
     NSString* urlTextEscaped = [urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     NSURL *newUrl = [NSURL URLWithString: urlTextEscaped];
-    NSLog(@"newUrl:%@", newUrl);
+    NSLog(@"FULL URL:%@", newUrl);
     
     NSMutableURLRequest *myRequest = [NSMutableURLRequest requestWithURL:newUrl
                                                              cachePolicy:NSURLCacheStorageAllowed
@@ -148,10 +150,12 @@ shouldStartLoadWithRequest: (NSURLRequest *)request
     else {
         NSLog(@"webView Did Finish Load :: %@", someHTML);//
         NSError *error = nil;
-            NSData *jsonData = [[self convertHTML:someHTML] dataUsingEncoding:NSASCIIStringEncoding];
-            NSArray *jsonArr = [NSJSONSerialization JSONObjectWithData:jsonData
+        NSData *jsonData = [[self convertHTML:someHTML] dataUsingEncoding:NSASCIIStringEncoding];
+        NSArray *jsonArr = [NSJSONSerialization JSONObjectWithData:jsonData
                                                                      options:kNilOptions error:&error];
-            if ([jsonArr[0] hasPrefix:@"New record has id"])
+        
+        //if ([jsonArr[0] hasPrefix:@"New record has id"])
+        if(![jsonArr[0] isKindOfClass:[NSDictionary class]])
             {
                 NSLog(@"Was a new user registration");
                 resultParameters = [[NSMutableDictionary alloc] initWithObjects:jsonArr forKeys:@[@"queryMessage"]];
